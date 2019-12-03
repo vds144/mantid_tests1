@@ -47,6 +47,9 @@
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\MSTest.TestFramework.1.3.2\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="Moq, Version=4.2.1510.2205, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.core, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <HintPath>packages\NUnitTestAdapter.WithFramework.2.0.0\lib\nunit.core.dll</HintPath>
       <Private>False</Private>
@@ -66,18 +69,34 @@
       <HintPath>packages\NUnitTestAdapter.WithFramework.2.0.0\lib\NUnit.VisualStudio.TestAdapter.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="RazorHosting, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\SimpleBrowser.0.5.61.0\lib\net40\RazorHosting.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleBrowser, Version=0.5.61.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\SimpleBrowser.0.5.61.0\lib\net40\SimpleBrowser.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleBrowser.WebDriver, Version=0.5.43.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\SimpleBrowser.WebDriver.0.5.43\lib\net40\SimpleBrowser.WebDriver.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net.FtpClient, Version=1.0.5824.34026, Culture=neutral, PublicKeyToken=fa4be07daa57c2b7, processorArchitecture=MSIL">
       <HintPath>packages\System.Net.FtpClient.1.0.5824.34026\lib\net40\System.Net.FtpClient.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml" />
     <Reference Include="WebDriver, Version=3.141.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Selenium.WebDriver.3.141.0\lib\net45\WebDriver.dll</HintPath>
+    </Reference>
+    <Reference Include="WebDriver.Support, Version=3.14.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Selenium.Support.3.14.0\lib\net45\WebDriver.Support.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="appmanager\ApplicationManager.cs" />
+    <Compile Include="appmanager\APIHelper.cs" />
     <Compile Include="appmanager\FtpHelper.cs" />
     <Compile Include="appmanager\LoginHelper.cs" />
     <Compile Include="appmanager\ManagementMenuHelper.cs" />
@@ -85,23 +104,88 @@
     <Compile Include="appmanager\ProjectManagementHelper.cs" />
     <Compile Include="appmanager\RegistrationHelper.cs" />
     <Compile Include="appmanager\HelperBase.cs" />
+    <Compile Include="Connected Services\Mantis\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="model\AccountData.cs" />
+    <Compile Include="model\IssueData.cs" />
     <Compile Include="model\ProjectData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="tests\AccountCreationTests.cs" />
+    <Compile Include="tests\AddNewIssue.cs" />
     <Compile Include="tests\AuthTestBase.cs" />
     <Compile Include="tests\ProjectCreationTests.cs" />
     <Compile Include="tests\ProjectRemovalTests.cs" />
     <Compile Include="tests\TestBase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="config_inc.php" />
+    <None Include="Connected Services\Mantis\mantisconnect.wsdl" />
+    <None Include="Connected Services\Mantis\mantis_tests.Mantis.AccountData.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\Mantis\mantis_tests.Mantis.CustomFieldDefinitionData.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\Mantis\mantis_tests.Mantis.FilterData.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\Mantis\mantis_tests.Mantis.HistoryData.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\Mantis\mantis_tests.Mantis.IssueData.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\Mantis\mantis_tests.Mantis.IssueHeaderData.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\Mantis\mantis_tests.Mantis.ObjectRef.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\Mantis\mantis_tests.Mantis.ProfileDataSearchResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\Mantis\mantis_tests.Mantis.ProjectAttachmentData.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\Mantis\mantis_tests.Mantis.ProjectData.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\Mantis\mantis_tests.Mantis.ProjectVersionData.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\Mantis\mantis_tests.Mantis.TagDataSearchResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\Mantis\mantis_tests.Mantis.UserData.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="packages.config" />
     <None Include="projects.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Connected Services\Mantis\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\Mantis\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\Mantis\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\Mantis\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

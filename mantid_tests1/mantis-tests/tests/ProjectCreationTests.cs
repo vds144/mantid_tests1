@@ -30,15 +30,21 @@ namespace mantis_tests.tests
         [Test, TestCaseSource("GroupDataFromCsvFile")]
         public void ProjectCreationTest(ProjectData project)
         {
-            app.Projects.DeleteIfProjectExist(project);
+            AccountData account = new AccountData()
+            {
+                Name = "administrator",
+                Password = "root"
+            };
 
-            List<ProjectData> oldProjects = app.Projects.GetProjectList();
+            app.Projects.DeleteIfProjectExist(account, project);
 
-            app.Projects.Create(project);
+            List<ProjectData> oldProjects = app.Projects.GetProjectList(account);
 
-            Assert.AreEqual(oldProjects.Count + 1, app.Projects.GetProjectCount());
+            app.Projects.Create(account, project);
 
-            List<ProjectData> newProjects = app.Projects.GetProjectList();
+            Assert.AreEqual(oldProjects.Count + 1, app.Projects.GetProjectCount(account));
+
+            List<ProjectData> newProjects = app.Projects.GetProjectList(account);
 
             oldProjects.Add(project);
             oldProjects.Sort();

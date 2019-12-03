@@ -19,6 +19,7 @@ namespace mantis_tests
         public ManagementMenuHelper Menu { get; private set; }
         public NavigationHelper NavigateTo { get; private set; }
         public RegistrationHelper Registration { get; private set; }
+        public APIHelper API { get; set; }
 
 
         private new static ThreadLocal<ApplicationManager> app = new ThreadLocal<ApplicationManager>();
@@ -26,13 +27,14 @@ namespace mantis_tests
         private ApplicationManager()
         {
             driver = new FirefoxDriver();
-            baseURL = "http://localhost/mantisbt-1.3.20/admin/install.php";
+            baseURL = "http://localhost/mantisbt-2.22.1";
             Registration = new RegistrationHelper(this);
             //Ftp = new FtpHelper(this);
             Projects = new ProjectManagementHelper(this);
             Auth = new LoginHelper(this);
             Menu = new ManagementMenuHelper(this);
             NavigateTo = new NavigationHelper(this, baseURL);
+            API = new APIHelper(this);
         }
 
         ~ApplicationManager()
@@ -53,7 +55,7 @@ namespace mantis_tests
             {
                 ApplicationManager newInstance = new ApplicationManager();
                 app.Value = newInstance;
-                newInstance.driver.Url = "http://localhost/mantisbt-1.3.20/admin/install.php";
+                newInstance.driver.Url = "http://localhost/mantisbt-2.22.1/login_page.php";
             }
             return app.Value;
         }

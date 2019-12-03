@@ -12,17 +12,28 @@ namespace mantis_tests
         [Test]
         public void ProjectRemovalTest()
         {
-            app.Projects.CreateIfNoProjectsExists();
+            AccountData account = new AccountData()
+            {
+                Name = "administrator",
+                Password = "root"
+            };
 
-            List<ProjectData> oldProjects = app.Projects.GetProjectList();
+            ProjectData project = new ProjectData()
+            {
+                Name = "New Project",
+            };
+
+            app.Projects.CreateIfNoProjectsExists(account, project);
+
+            List<ProjectData> oldProjects = app.Projects.GetProjectList(account);
 
             ProjectData toBeRemoved = oldProjects[0];
 
-            app.Projects.Remove(toBeRemoved);
+            app.Projects.Remove(account, toBeRemoved.Id);
 
-            Assert.AreEqual(oldProjects.Count - 1, app.Projects.GetProjectCount());
+            Assert.AreEqual(oldProjects.Count - 1, app.Projects.GetProjectCount(account));
 
-            List<ProjectData> newProjects = app.Projects.GetProjectList();
+            List<ProjectData> newProjects = app.Projects.GetProjectList(account);
 
             oldProjects.RemoveAt(0);
 

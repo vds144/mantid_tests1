@@ -22,6 +22,14 @@ namespace mantis_tests
             SubmitProjectCreation();
         }
 
+        public void Create(AccountData account, ProjectData projectData)
+        {
+            Mantis.MantisConnectPortTypeClient client = new Mantis.MantisConnectPortTypeClient();
+            Mantis.ProjectData project = new Mantis.ProjectData();
+            project.name = projectData.Name;
+            client.mc_project_add(account.Name, account.Password, project);
+        }
+
         private void SubmitProjectCreation()
         {
             driver.FindElement(By.CssSelector("div.widget-toolbox input.btn-primary")).Click();
@@ -53,6 +61,15 @@ namespace mantis_tests
                 Create(project);
             }
         }
+
+        public void CreateIfNoProjectsExists(AccountData account, ProjectData project)
+        {
+            if (GetProjectList(account).Count == 0)
+            {
+                Create(account, project);
+            }
+        }
+
         public void Remove(ProjectData project)
         {
             manager.Menu.GoToProjectTab();
@@ -94,6 +111,23 @@ namespace mantis_tests
             return list;
         }
 
+        public List<ProjectData> GetProjectList(AccountData account)
+        {
+            List<ProjectData> list = new List<ProjectData>();
+
+            Mantis.MantisConnectPortTypeClient client = new Mantis.MantisConnectPortTypeClient();
+            Mantis.ProjectData[] projects = client.mc_projects_get_user_accessible(account.Name, account.Password);
+            foreach (Mantis.ProjectData project in projects)
+            {
+                list.Add(new ProjectData()
+                {
+                    Id = project.id,
+                    Name = project.name,
+                    Description = project.description
+                });
+            }
+            return list;
+        }
         public int GetProjectCount()
         {
             manager.Menu.OpenManagementMenu();
@@ -103,6 +137,17 @@ namespace mantis_tests
                 .Count();
         }
 
+        public int GetProjectCount(AccountData account)
+        {
+            return GetProjectList(account).Count();
+        }
+
+        public void Remove(AccountData account, String projectId)
+        {
+            Mantis.MantisConnectPortTypeClient client = new Mantis.MantisConnectPortTypeClient();
+            client.mc_project_delete(account.Name, account.Password, projectId);
+        }
+
         public void DeleteIfProjectExist(ProjectData project)
         {
             manager.Menu.GoToProjectTab();
@@ -110,6 +155,17 @@ namespace mantis_tests
             if (IsElementPresent(By.XPath("//table[1]/tbody/tr/td[1]/a[.='" + project.Name + "']")))
             {
                 Remove(project);
+            }
+        }
+
+        public void DeleteIfProjectExist(AccountData account, ProjectData project)
+        {
+            Mantis.MantisConnectPortTypeClient client = new Mantis.MantisConnectPortTypeClient();
+            string projectId = client.mc_project_get_id_from_name(account.Name, account.Password, project.Name);
+
+            if (projectId != null && projectId != "0")
+            {
+                Remove(account, projectId);
             }
         }
     }
